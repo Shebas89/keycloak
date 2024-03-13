@@ -96,7 +96,7 @@ resource "keycloak_openid_user_client_role_protocol_mapper" "client_roles" {
   claim_name          = "resource_access.$${client_id}.roles"
   multivalued         = true
   claim_value_type    = "String"
-  add_to_id_token     = false
+  add_to_id_token     = true
   add_to_access_token = true
   add_to_userinfo     = false
 }
@@ -123,4 +123,42 @@ resource "keycloak_openid_group_membership_protocol_mapper" "groups" {
   add_to_id_token     = true
   add_to_access_token = true
   add_to_userinfo     = true
+}
+
+resource "keycloak_role" "admin_client_role" {
+  realm_id    = var.realm_id
+  client_id = keycloak_openid_client.grafana_client.id
+  name        = "Admin"
+  description = "Admin Role"
+  attributes = {
+    "roleType" = "admin"
+  }
+}
+
+resource "keycloak_role" "editor_client_role" {
+  realm_id    = var.realm_id
+  client_id   = keycloak_openid_client.grafana_client.id
+  name        = "Editor"
+  description = "Editor Role"
+  attributes = {
+    "roleType" = "editor"
+  }
+}
+
+resource "keycloak_group_roles" "admin_group_roles" {
+  realm_id = var.realm_id
+  group_id = var.admin_group_id
+
+  role_ids = [
+    keycloak_role.admin_client_role.id
+  ]
+}
+
+resource "keycloak_group_roles" "editor_group_roles" {
+  realm_id = var.realm_id
+  group_id = var.users_group_id
+
+  role_ids = [
+    keycloak_role.editor_client_role.id
+  ]
 }

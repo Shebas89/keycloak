@@ -2,39 +2,49 @@ module "Realm" {
   source = "./realm"
 }
 
+module "groups" {
+  source   = "./groups"
+  for_each = var.groups
+
+  realm_id   = module.Realm.realm_id
+  group_name = each.value
+}
+
 module "clientArgoCD" {
   source = "./clients/argocd"
 
-  realm_id      = module.Realm.realm_id
-  domain        = var.domain
+  realm_id = module.Realm.realm_id
+  domain   = var.domain
 }
 
 module "clientGitlab" {
   source = "./clients/gitlab"
 
-  realm_id      = module.Realm.realm_id
-  domain        = var.domain
+  realm_id = module.Realm.realm_id
+  domain   = var.domain
 }
 
 module "clientKiali" {
   source = "./clients/kiali"
 
-  realm_id      = module.Realm.realm_id
-  domain        = var.domain
+  realm_id = module.Realm.realm_id
+  domain   = var.domain
 }
 
 module "clientMattermost" {
   source = "./clients/mattermost"
 
-  realm_id      = module.Realm.realm_id
-  domain        = var.domain
+  realm_id = module.Realm.realm_id
+  domain   = var.domain
 }
 
 module "clientMonitoring" {
   source = "./clients/monitoring"
 
-  realm_id                   = module.Realm.realm_id
-  domain                     = var.domain
+  realm_id = module.Realm.realm_id
+  domain   = var.domain
+  admin_group_id = module.groups["Administrator"].id
+  users_group_id = module.groups["Users"].id
 }
 
 module "clientNexus" {
@@ -56,12 +66,4 @@ module "clientSonarqube" {
 
   realm_id = module.Realm.realm_id
   domain   = var.domain
-}
-
-module "groups" {
-  source   = "./groups"
-  for_each = var.groups
-
-  realm_id   = module.Realm.realm_id
-  group_name = each.value
 }
