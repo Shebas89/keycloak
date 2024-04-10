@@ -1,5 +1,8 @@
 module "Realm" {
   source = "./realm"
+
+  realmId      = "realm-test"
+  display_name = "Realm Test"
 }
 
 module "groups" {

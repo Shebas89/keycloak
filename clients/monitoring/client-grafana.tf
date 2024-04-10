@@ -128,8 +128,8 @@ resource "keycloak_openid_group_membership_protocol_mapper" "groups" {
 resource "keycloak_role" "admin_client_role" {
   realm_id    = var.realm_id
   client_id = keycloak_openid_client.grafana_client.id
-  name        = "Admin"
-  description = "Admin Role"
+  name        = "admin"
+  description = "admin Role"
   attributes = {
     "roleType" = "admin"
   }
@@ -138,8 +138,8 @@ resource "keycloak_role" "admin_client_role" {
 resource "keycloak_role" "editor_client_role" {
   realm_id    = var.realm_id
   client_id   = keycloak_openid_client.grafana_client.id
-  name        = "Editor"
-  description = "Editor Role"
+  name        = "editor"
+  description = "editor Role"
   attributes = {
     "roleType" = "editor"
   }
